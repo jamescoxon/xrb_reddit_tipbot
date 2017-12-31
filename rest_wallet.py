@@ -1,7 +1,6 @@
 import json
 import pycurl
 from io import BytesIO
-import logging
 import traceback
 
 
@@ -10,13 +9,10 @@ class RestWallet:
     def __init__(self, node_ip, node_port):
         self.node_ip = node_ip
         self.node_port = node_port
-        logging.basicConfig(filename="rest_wallet.log", level=logging.INFO)
-        log = logging.getLogger("wallet")
-        self.log = log
 
-    def post_to_wallet(self, payload):
+    def post_to_wallet(self, payload, logger):
         try:
-            self.log.error("Making pycurl call with node_ip=" + self.node_ip + " node_port=" + self.node_port \
+            logger.error("Making pycurl call with node_ip=" + self.node_ip + " node_port=" + self.node_port \
                            + " payload=" + str(payload))
             buffer_data = BytesIO()
             c = pycurl.Curl()
@@ -33,8 +29,8 @@ class RestWallet:
             post_body = json.loads(body.decode('iso-8859-1'))
         except pycurl.error as e:
             tb = traceback.format_exc()
-            self.log.error(e)
-            self.log.error(tb)
+            logger.error(e)
+            logger.error(tb)
             raise Exception('Error with pycurl')
 
         return post_body

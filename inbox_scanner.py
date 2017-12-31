@@ -24,9 +24,9 @@ class InboxScanner:
             user_data = user_table.find_one(user_id=item.author.name)
             user_address = user_data['xrb_address']
             data = {'action': 'account_balance', 'account': user_address}
-            parsed_json = self.rest_wallet.post_to_wallet(data)
+            parsed_json = self.rest_wallet.post_to_wallet(data, self.log)
             data = {'action': 'rai_from_raw', 'amount': int(parsed_json['balance'])}
-            rai_balance = self.rest_wallet.post_to_wallet(data)
+            rai_balance = self.rest_wallet.post_to_wallet(data, self.log)
 
             rai_send = float(amount) * 1000000  # float of total send
             raw_send = str(int(rai_send)) + '000000000000000000000000'
@@ -34,7 +34,7 @@ class InboxScanner:
             if int(rai_send) <= int(rai_balance['amount']):
                 data = {'action': 'send', 'wallet': self.wallet_id, 'source': user_address, 'destination': send_address,
                         'amount': int(raw_send)}
-                parsed_json = self.rest_wallet.post_to_wallet(data)
+                parsed_json = self.rest_wallet.post_to_wallet(data, self.log)
                 reply_message = 'Sent %s to %s\n\nBlock: %s' % (amount, send_address, str(parsed_json['block']))
                 item.reply(reply_message)
             else:
@@ -51,7 +51,7 @@ class InboxScanner:
         amount = commands[1]
         send_address = commands[2]
         data = {"action": "validate_account_number", "account": send_address}
-        check_address = self.rest_wallet.post_to_wallet(data)
+        check_address = self.rest_wallet.post_to_wallet(data, self.log)
         if len(send_address) != 64 or send_address[:4] != "xrb_" or check_address['valid'] != '1':
             self.log.info('Invalid destination address')
             reply_message = 'Invalid destination address : %s' % send_address
@@ -63,10 +63,10 @@ class InboxScanner:
         user_data = user_table.find_one(user_id=item.author.name)
         user_address = user_data['xrb_address']
         data = {'action': 'account_balance', 'account': user_address}
-        parsed_json = self.rest_wallet.post_to_wallet(data)
+        parsed_json = self.rest_wallet.post_to_wallet(data, self.log)
 
         data = {'action': 'rai_from_raw', 'amount': int(parsed_json['balance'])}
-        rai_balance = self.rest_wallet.post_to_wallet(data)
+        rai_balance = self.rest_wallet.post_to_wallet(data, self.log)
         self.log.info(rai_balance['amount'])
         xrb_balance = format((float(rai_balance['amount']) / 1000000.0), '.6f')
         reply_message = 'Your balance is :\n\n %s' % xrb_balance
@@ -75,7 +75,7 @@ class InboxScanner:
     def register_account(self, item, user_table):
         # Generate address
         data = {'action': 'account_create', 'wallet': self.wallet_id}
-        parsed_json = self.rest_wallet.post_to_wallet(data)
+        parsed_json = self.rest_wallet.post_to_wallet(data, self.log)
         self.log.info(parsed_json['account'])
         # Add to database
         user_table.insert(dict(user_id=item.author.name, xrb_address=parsed_json['account']))

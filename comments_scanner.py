@@ -23,10 +23,10 @@ class CommentsScanner:
             self.log.info("Sending amount: "+str(amount))
             data = {'action': 'account_balance',
                     'account': sender_user_address}
-            post_body = self.rest_wallet.post_to_wallet(data)
+            post_body = self.rest_wallet.post_to_wallet(data, self.log)
             data = {'action': 'rai_from_raw', 'amount': int(
                 post_body['balance'])}
-            rai_balance = self.rest_wallet.post_to_wallet(data)
+            rai_balance = self.rest_wallet.post_to_wallet(data, self.log)
 
             # float of total send
             rai_send = float(amount) * 1000000
@@ -37,7 +37,7 @@ class CommentsScanner:
                 self.log.info('Tipping now')
                 data = {'action': 'send', 'wallet': self.wallet_id, 'source': sender_user_address,
                         'destination': receiving_address, 'amount': int(raw_send)}
-                post_body = self.rest_wallet.post_to_wallet(data)
+                post_body = self.rest_wallet.post_to_wallet(data, self.log)
                 reply_text = 'Tipped %s to /u/%s\n\nBlock: %s' % (
                     amount, receiving_user, str(post_body['block']))
             else:
@@ -75,7 +75,7 @@ class CommentsScanner:
                 # Generate address
                 data = {'action': 'account_create',
                         'wallet': self.wallet_id}
-                post_body = self.rest_wallet.post_to_wallet(data)
+                post_body = self.rest_wallet.post_to_wallet(data, self.log)
                 self.log.info(post_body['account'])
 
                 # Add to database

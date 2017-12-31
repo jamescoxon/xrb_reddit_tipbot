@@ -14,7 +14,7 @@ class RestWallet:
         try:
             logger.info("Making pycurl call with node_ip=" + str(self.node_ip) + " node_port=" + str(self.node_port)
                         + " payload=" + str(payload))
-            
+
             buffer_data = BytesIO()
             c = pycurl.Curl()
             c.setopt(c.URL, self.node_ip)
@@ -26,7 +26,7 @@ class RestWallet:
 
             c.close()
 
-            body = buffer.getvalue()
+            body = buffer_data.getvalue()
             post_body = json.loads(body.decode('iso-8859-1'))
         except pycurl.error as e:
             tb = traceback.format_exc()

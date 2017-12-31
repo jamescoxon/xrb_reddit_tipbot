@@ -24,7 +24,7 @@ class InboxLauncher:
         self.subreddit = settings.subreddit
 
     def main(self):
-        inbox = inbox_scanner.CommentsScanner(self.db, self.reddit_client, self.wallet_id, self.rest_wallet,
+        inbox = inbox_scanner.InboxScanner(self.db, self.reddit_client, self.wallet_id, self.rest_wallet,
                                               self.subreddit)
         inbox.run_scan_loop()
 

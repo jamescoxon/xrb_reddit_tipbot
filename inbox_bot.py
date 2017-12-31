@@ -3,6 +3,8 @@ import dataset
 import json
 import time
 import pycurl
+import sys
+import prawcore
 from io import BytesIO
 
 import settings
@@ -131,5 +133,5 @@ while 1:
 
 			#Add message to database
 			message_table.insert(dict(user_id=item.author.name, message_id=item.name))
-	except:
-			print('Lost connection - restart')
+	except prawcore.exceptions.OAuthException as e:
+			print("could not log in because: " + str(e))

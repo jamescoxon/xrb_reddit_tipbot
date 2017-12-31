@@ -8,5 +8,6 @@ wallet_id = ''
 
 connection_string = ''
 node_ip = ''
+node_port = ''
 
 subreddit = ''

@@ -15,7 +15,7 @@ class InboxScanner:
         self.subreddit = subreddit
 
         logging.basicConfig(filename="inbox_scanner.log", level=logging.DEBUG)
-        log = logging.getLogger("ex")
+        log = logging.getLogger("inbox_scanner")
         self.log = log
 
     def transfer_funds(self, amount, item, user_table, send_address):
@@ -84,7 +84,6 @@ class InboxScanner:
         item.reply(reply_message)
 
     def parse_item(self, item):
-
         user_table = self.db['user']
         message_table = self.db['message']
 

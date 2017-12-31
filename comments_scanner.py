@@ -14,12 +14,12 @@ class CommentsScanner:
         self.subreddit = subreddit
 
         logging.basicConfig(filename="comments_scanner.log", level=logging.DEBUG)
-        log = logging.getLogger("ex")
+        log = logging.getLogger("comments_scanner")
         self.log = log
 
     def send_tip(self, comment, amount, sender_user_address, receiving_address, receiving_user):
         try:
-            print(amount)
+            self.log.info("Sending amount: "+str(amount))
             data = {'action': 'account_balance',
                     'account': sender_user_address}
             post_body = self.rest_wallet.post_to_wallet(data)
@@ -30,10 +30,10 @@ class CommentsScanner:
             # float of total send
             rai_send = float(amount) * 1000000
             raw_send = str(int(rai_send)) + '000000000000000000000000'
-            print(rai_balance['amount'])
+            self.log.info("Current rai balance: "+rai_balance['amount'])
             # check amount left
             if int(rai_send) <= int(rai_balance['amount']):
-                print('Tipping')
+                self.log.info('Tipping now')
                 data = {'action': 'send', 'wallet': self.wallet_id, 'source': sender_user_address,
                         'destination': receiving_address, 'amount': int(raw_send)}
                 post_body = self.rest_wallet.post_to_wallet(data)

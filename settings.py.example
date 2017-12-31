@@ -1,10 +1,12 @@
-my_user_agent = 'insert_here'
-my_client_id = 'insert_here'
-my_client_secret = 'insert_here'
-my_username = 'insert_here'
-my_password = 'insert_here'
+user_agent = ''
+client_id = ''
+client_secret = ''
+username = ''
+password = ''
 
-wallet = 'insert_here'
+wallet_id = ''
 
-connection_string = 'insert_here'
-node_ip = 'insert_here'
+connection_string = ''
+node_ip = ''
+
+subreddit = ''

@@ -42,7 +42,7 @@ class InboxScanner:
         except:
             reply_message = 'Invalid amount : %s' % amount
             item.reply(reply_message)
-            self.log.error("Unexpected error:", sys.exc_info()[0])
+            self.log.error("Unexpected error: " + str(sys.exc_info()[0]))
 
     def prepare_send(self, commands, item, user_table):
         amount = commands[1]
@@ -91,7 +91,7 @@ class InboxScanner:
             self.log.info('Already in db, ignore')
         else:
             if user_table.find_one(user_id=item.author.name):
-                self.log.info('Found Author %s' % item.author.name)
+                self.log.info('Found Author ' + str(item.author.name))
                 commands = item.body.split(" ")
                 self.log.info(commands[0])
                 if commands[0] == '!help':

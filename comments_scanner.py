@@ -30,7 +30,7 @@ class CommentsScanner:
             # float of total send
             rai_send = float(amount) * 1000000
             raw_send = str(int(rai_send)) + '000000000000000000000000'
-            self.log.info("Current rai balance: "+rai_balance['amount'])
+            self.log.info("Current rai balance: " + str(rai_balance['amount']))
             # check amount left
             if int(rai_send) <= int(rai_balance['amount']):
                 self.log.info('Tipping now')
@@ -44,7 +44,7 @@ class CommentsScanner:
 
             comment.reply(reply_text)
         except:
-            self.log.error("Unexpected error:", sys.exc_info()[0])
+            self.log.error("Unexpected error: " + str(sys.exc_info()[0]))
 
     def process_tip(self, amount, comment, receiving_user):
         user_table = self.db['user']
@@ -81,7 +81,7 @@ class CommentsScanner:
                 try:
                     comment.reply(reply_text)
                 except:
-                    self.log.error("Unexpected error:", sys.exc_info()[0])
+                    self.log.error("Unexpected error: " + str(sys.exc_info()[0]))
 
             self.send_tip(comment, amount, sender_user_address, receiving_address, receiving_user)
 

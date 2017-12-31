@@ -12,14 +12,15 @@ my_client_id = settings.my_client_id
 my_client_secret = settings.my_client_secret
 my_username = settings.my_username
 my_password = settings.my_password
-
+node_ip = settings.node_ip
+connection_string = settings.connection_string
 wallet = settings.wallet
 
 def wallet_com(data):
 
 	buffer = BytesIO()
 	c = pycurl.Curl()
-	c.setopt(c.URL, '127.0.0.1')
+	c.setopt(c.URL, node_ip)
 	c.setopt(c.PORT, 7076)
 	c.setopt(c.POSTFIELDS, json.dumps(data))
 	c.setopt(c.WRITEFUNCTION, buffer.write)
@@ -38,7 +39,7 @@ reddit = praw.Reddit(user_agent=my_user_agent,
      username=my_username,
      password=my_password)
 
-db = dataset.connect('sqlite:///reddit.db')
+db = dataset.connect(connection_string)
 # get a reference to the table 'user'
 comment_table = db['comments']
 user_table = db['user']

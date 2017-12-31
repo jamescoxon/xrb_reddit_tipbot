@@ -5,3 +5,6 @@ my_username = 'insert_here'
 my_password = 'insert_here'
 
 wallet = 'insert_here'
+
+connection_string = 'insert_here'
+node_ip = 'insert_here'

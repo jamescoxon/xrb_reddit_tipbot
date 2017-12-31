@@ -15,7 +15,7 @@ class InboxScanner:
         self.subreddit = subreddit
 
         logging.basicConfig(filename="inbox_scanner.log", level=logging.DEBUG)
-        log = logging.getLogger("inbox_scanner")
+        log = logging.getLogger("inbox")
         self.log = log
 
     def transfer_funds(self, amount, item, user_table, send_address):

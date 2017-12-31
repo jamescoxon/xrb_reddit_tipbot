@@ -14,7 +14,7 @@ class CommentsScanner:
         self.subreddit = subreddit
 
         logging.basicConfig(filename="comments_scanner.log", level=logging.DEBUG)
-        log = logging.getLogger("comments_scanner")
+        log = logging.getLogger("comments")
         self.log = log
 
     def send_tip(self, comment, amount, sender_user_address, receiving_address, receiving_user):

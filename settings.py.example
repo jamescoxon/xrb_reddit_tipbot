@@ -7,7 +7,7 @@ password = ''
 wallet_id = ''
 
 connection_string = ''
-node_ip = ''
+node_ip = 7076
 node_port = ''
 
 subreddit = ''

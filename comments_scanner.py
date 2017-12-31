@@ -13,7 +13,7 @@ class CommentsScanner:
         self.rest_wallet = rest_wallet
         self.subreddit = subreddit
 
-        logging.basicConfig(filename="comments_scanner.log", level=logging.DEBUG)
+        logging.basicConfig(filename="comments_scanner.log", level=logging.INFO)
         log = logging.getLogger("comments")
         self.log = log
 

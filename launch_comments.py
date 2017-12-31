@@ -1,15 +1,12 @@
-from multiprocessing import Process
-
 import dataset
 import praw
 
 import comments_scanner
-import inbox_scanner
-import settings
 import rest_wallet
+import settings
 
 
-class RaiBlocksTipBot:
+class CommentsLauncher:
 
     # Multiprocessing not completely functional currently, launch the scanners separately
 
@@ -27,16 +24,11 @@ class RaiBlocksTipBot:
         self.subreddit = settings.subreddit
 
     def main(self):
-        comments = comments_scanner.CommentsScanner(self.db, self.reddit_client, self.wallet_id, self.rest_wallet, self.subreddit)
-        inbox = inbox_scanner.InboxScanner(self.db, self.reddit_client, self.wallet_id, self.rest_wallet, self.subreddit)
-
-        inbox_process = Process(target=inbox.run_scan_loop)
-        comments_process = Process(target=comments.run_scan_loop)
-
-        inbox_process.start()
-        comments_process.start()
+        comments = comments_scanner.CommentsScanner(self.db, self.reddit_client, self.wallet_id, self.rest_wallet,
+                                                    self.subreddit)
+        comments.run_scan_loop()
 
 
 if __name__ == '__main__':
-    tip_bot = RaiBlocksTipBot()
-    tip_bot.main()
+    launcher = CommentsLauncher()
+    launcher.main()

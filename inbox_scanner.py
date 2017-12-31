@@ -3,6 +3,7 @@ import sys
 import praw.exceptions
 import prawcore
 import logging
+import traceback
 
 
 class InboxScanner:
@@ -43,6 +44,8 @@ class InboxScanner:
             reply_message = 'Invalid amount : %s' % amount
             item.reply(reply_message)
             self.log.error("Unexpected error: " + str(sys.exc_info()[0]))
+            tb = traceback.format_exc()
+            self.log.error(tb)
 
     def prepare_send(self, commands, item, user_table):
         amount = commands[1]
@@ -129,6 +132,8 @@ class InboxScanner:
 
         except (praw.exceptions.PRAWException, prawcore.exceptions.PrawcoreException) as e:
             self.log.error("could not log in because: " + str(e))
+            tb = traceback.format_exc()
+            self.log.error(tb)
 
     def run_scan_loop(self):
         while 1:

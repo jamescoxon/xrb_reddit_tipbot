@@ -3,6 +3,7 @@ import sys
 import praw.exceptions
 import prawcore
 import logging
+import traceback
 
 
 class CommentsScanner:
@@ -44,9 +45,13 @@ class CommentsScanner:
 
             comment.reply(reply_text)
         except TypeError as e:
+            tb = traceback.format_exc()
             self.log.error(e)
+            self.log.error(tb)
         except:
             self.log.error("Unexpected error in send_tip: " + str(sys.exc_info()[0]))
+            tb = traceback.format_exc()
+            self.log.error(tb)
 
     def process_tip(self, amount, comment, receiving_user):
         user_table = self.db['user']
@@ -84,6 +89,8 @@ class CommentsScanner:
                     comment.reply(reply_text)
                 except:
                     self.log.error("Unexpected error in process_tip: " + str(sys.exc_info()[0]))
+                    tb = traceback.format_exc()
+                    self.log.error(tb)
 
             self.send_tip(comment, amount, sender_user_address, receiving_address, receiving_user)
 
@@ -149,7 +156,9 @@ class CommentsScanner:
                 self.parse_comment(comment)
 
         except (praw.exceptions.PRAWException, prawcore.exceptions.PrawcoreException) as e:
+            tb = traceback.format_exc()
             self.log.error("could not log in because: " + str(e))
+            self.log.error(tb)
 
     def run_scan_loop(self):
         while 1:

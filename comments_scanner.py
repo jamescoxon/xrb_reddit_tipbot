@@ -1,9 +1,9 @@
+import logging
 import sys
+import traceback
 
 import praw.exceptions
 import prawcore
-import logging
-import traceback
 
 
 class CommentsScanner:
@@ -20,7 +20,7 @@ class CommentsScanner:
 
     def send_tip(self, comment, amount, sender_user_address, receiving_address, receiving_user):
         try:
-            self.log.info("Sending amount: "+str(amount))
+            self.log.info("Sending amount: " + str(amount))
             data = {'action': 'account_balance',
                     'account': sender_user_address}
             post_body = self.rest_wallet.post_to_wallet(data, self.log)
@@ -83,8 +83,8 @@ class CommentsScanner:
                 user_table.insert(
                     dict(user_id=receiving_user, post_body=post_body['account']))
                 receiving_address = post_body['account']
-                reply_text = '%s isnt registered with the bot so Ive made an account for them, they can access' + \
-                             ' it by DM the bot' % receiving_user
+                reply_text = str(receiving_user) + 'isnt registered with the bot so Ive made an account for them, ' \
+                             + 'they can access it by DM the bot'
                 try:
                     comment.reply(reply_text)
                 except:
@@ -95,8 +95,8 @@ class CommentsScanner:
             self.send_tip(comment, amount, sender_user_address, receiving_address, receiving_user)
 
         else:
-            reply_text = 'Hi, /u/%s please register with the bot by sending it a message and it will make ' + \
-                         'you an account' % comment.author.name
+            reply_text = 'Hi, /u/' + str(comment.author.name) + ' please register with the bot by sending it a' \
+                         + ' message and it will make you an account'
             comment.reply(reply_text)
 
         # Add to db
@@ -149,7 +149,7 @@ class CommentsScanner:
     def scan_comments(self):
         subreddit_client_ = self.reddit_client.subreddit(self.subreddit)
 
-        self.log.info('Tracking r/'+self.subreddit+' Comments')
+        self.log.info('Tracking r/' + self.subreddit + ' Comments')
 
         try:
             for comment in subreddit_client_.stream.comments():

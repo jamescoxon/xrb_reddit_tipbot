@@ -1,9 +1,9 @@
+import logging
 import sys
+import traceback
 
 import praw.exceptions
 import prawcore
-import logging
-import traceback
 
 
 class InboxScanner:
@@ -81,9 +81,9 @@ class InboxScanner:
         user_table.insert(dict(user_id=item.author.name, xrb_address=parsed_json['account']))
         # Reply
         explorer_link = 'https://raiblocks.net/account/index.php?acc=' + parsed_json['account']
-        reply_message = 'Thanks for registering, your deposit address is ' + \
-                        '%s and you can check your balance here %s\r\nFor more details reply with !help' \
-                        % (parsed_json['account'], explorer_link)
+        reply_message = 'Thanks for registering, your deposit address is ' + parsed_json['account'] + \
+                        ' and you can see your balance here ' + explorer_link + '\r\nFor more details reply with !help'
+
         item.reply(reply_message)
 
     def parse_item(self, item):

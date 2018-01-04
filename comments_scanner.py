@@ -79,11 +79,11 @@ class CommentsScanner:
                 self.log.info(post_body['account'])
 
                 # Add to database
-
-                user_table.insert(
-                    dict(user_id=receiving_user, post_body=post_body['account']))
+                record = dict(user_id=receiving_user, xrb_address=post_body['account'])
+                self.log.info("Inserting into db: " + str(record))
+                user_table.insert(record)
                 receiving_address = post_body['account']
-                reply_text = str(receiving_user) + 'isnt registered with the bot so Ive made an account for them, ' \
+                reply_text = str(receiving_user) + ' isnt registered with the bot so Ive made an account for them, ' \
                              + 'they can access it by DM the bot'
                 try:
                     comment.reply(reply_text)
@@ -100,8 +100,10 @@ class CommentsScanner:
             comment.reply(reply_text)
 
         # Add to db
-        comment_table.insert(dict(
-            comment_id=comment.fullname, to=receiving_user, amount=amount, author=comment.author.name))
+        record = dict(
+            comment_id=comment.fullname, to=receiving_user, amount=amount, author=comment.author.name)
+        self.log.info("Inserting into db: " + str(record))
+        comment_table.insert(record)
         self.log.info('DB updated')
 
     def parse_tip(self, comment, parts_of_comment):
@@ -143,7 +145,7 @@ class CommentsScanner:
         self.log.info(comment.body)
 
         if parts_of_comment[0].lower() == '!tipxrb':
-            self.log.info('Found tip reference in comments')
+            self.log.info('Found tip reference in comments\n\n')
             self.parse_tip(comment, parts_of_comment)
 
     def scan_comments(self):

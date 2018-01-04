@@ -78,7 +78,9 @@ class InboxScanner:
         parsed_json = self.rest_wallet.post_to_wallet(data, self.log)
         self.log.info(parsed_json['account'])
         # Add to database
-        user_table.insert(dict(user_id=item.author.name, xrb_address=parsed_json['account']))
+        record = dict(user_id=item.author.name, xrb_address=parsed_json['account'])
+        self.log.info("Inserting into db: " + str(record))
+        user_table.insert(record)
         # Reply
         explorer_link = 'https://raiblocks.net/account/index.php?acc=' + parsed_json['account']
         reply_message = 'Thanks for registering, your deposit address is ' + parsed_json['account'] + \
@@ -91,10 +93,10 @@ class InboxScanner:
         message_table = self.db['message']
 
         if message_table.find_one(message_id=item.name):
-            self.log.info('Already in db, ignore')
+            self.log.info('Already in db, ignore'+"\n\n")
         else:
             if user_table.find_one(user_id=item.author.name):
-                self.log.info('Found Author ' + str(item.author.name))
+                self.log.info('Found Author ' + str(item.author.name)+"\n\n")
                 commands = item.body.split(" ")
                 self.log.info(commands[0])
                 if commands[0] == '!help':
@@ -120,7 +122,9 @@ class InboxScanner:
                 self.register_account(item, user_table)
 
         # Add message to database
-        message_table.insert(dict(user_id=item.author.name, message_id=item.name))
+        record = dict(user_id=item.author.name, message_id=item.name)
+        self.log.info("Inserting into db: " + str(record))
+        message_table.insert(record)
 
     def scan_inbox(self):
 

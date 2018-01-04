@@ -142,10 +142,9 @@ class CommentsScanner:
     def parse_comment(self, comment):
         parts_of_comment = comment.body.split(" ")
 
-        self.log.info(comment.body)
-
         if parts_of_comment[0].lower() == '!tipxrb':
-            self.log.info('Found tip reference in comments\n\n')
+            self.log.info('\n\n')
+            self.log.info('Found tip reference in comments')
             self.parse_tip(comment, parts_of_comment)
 
     def scan_comments(self):

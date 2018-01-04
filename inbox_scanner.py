@@ -91,12 +91,13 @@ class InboxScanner:
     def parse_item(self, item):
         user_table = self.db['user']
         message_table = self.db['message']
-
+        self.log.info("\n\n")
+        self.log.info("New Inbox Received")
         if message_table.find_one(message_id=item.name):
-            self.log.info('Already in db, ignore'+"\n\n")
+            self.log.info('Already in db, ignore')
         else:
             if user_table.find_one(user_id=item.author.name):
-                self.log.info('Found Author ' + str(item.author.name)+"\n\n")
+                self.log.info('Found Author ' + str(item.author.name))
                 commands = item.body.split(" ")
                 self.log.info(commands[0])
                 if commands[0] == '!help':

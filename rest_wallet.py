@@ -28,6 +28,7 @@ class RestWallet:
 
             body = buffer_data.getvalue()
             post_body = json.loads(body.decode('iso-8859-1'))
+            logger.info("Returned payload= "+str(post_body))
         except pycurl.error as e:
             tb = traceback.format_exc()
             logger.error(e)

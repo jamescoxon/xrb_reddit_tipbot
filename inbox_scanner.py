@@ -120,8 +120,8 @@ class InboxScanner:
                     self.log.info('Sending raiblocks')
                     self.prepare_send(commands, item, user_table)
             else:
-                self.log.info('Not in DB - registering')
-                self.register_account(item, user_table)
+                self.log.info('Not in DB - not registering')
+                #self.register_account(item, user_table)
 
         # Add message to database
         record = dict(user_id=item.author.name, message_id=item.name)

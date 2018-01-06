@@ -1,3 +1,4 @@
+import datetime
 import logging
 import sys
 import traceback
@@ -14,9 +15,15 @@ class CommentsScanner:
         self.rest_wallet = rest_wallet
         self.subreddit = subreddit
 
-        logging.basicConfig(filename="comments_scanner.log", level=logging.INFO)
+        log_file_name = "comments_scanner_" + str(datetime.datetime.now().isoformat()) + ".log"
+        logging.basicConfig(filename=log_file_name, level=logging.INFO, format='%(asctime)s %(message)s')
         log = logging.getLogger("comments")
         self.log = log
+
+    def comment_reply(self, comment, reply_text):
+        self.log.info("COMMENT REPLY")
+        self.log.info(reply_text)
+        comment.reply(reply_text)
 
     def send_tip(self, comment, amount, sender_user_address, receiving_address, receiving_user):
         try:
@@ -43,7 +50,7 @@ class CommentsScanner:
             else:
                 reply_text = 'Not enough in your account to tip'
 
-            comment.reply(reply_text)
+            self.comment_reply(comment, reply_text)
         except TypeError as e:
             tb = traceback.format_exc()
             self.log.error(e)
@@ -86,7 +93,7 @@ class CommentsScanner:
                 reply_text = str(receiving_user) + ' isnt registered with the bot so Ive made an account for them, ' \
                              + 'they can access it by DM the bot'
                 try:
-                    comment.reply(reply_text)
+                    self.comment_reply(comment, reply_text)
                 except:
                     self.log.error("Unexpected error in process_tip: " + str(sys.exc_info()[0]))
                     tb = traceback.format_exc()
@@ -97,7 +104,7 @@ class CommentsScanner:
         else:
             reply_text = 'Hi, /u/' + str(comment.author.name) + ' please register with the bot by sending it a' \
                          + ' message and it will make you an account'
-            comment.reply(reply_text)
+            self.comment_reply(comment, reply_text)
 
         # Add to db
         record = dict(
@@ -137,7 +144,7 @@ class CommentsScanner:
                 self.process_tip(amount, comment, receiving_user)
             else:
                 self.log.info('Invalid amount')
-                comment.reply('Tip command is invalid. Follow the format `!tipxrb <username> <amount>`')
+                self.comment_reply(comment, 'Tip command is invalid. Follow the format `!tipxrb <username> <amount>`')
 
     def parse_comment(self, comment):
         parts_of_comment = comment.body.split(" ")

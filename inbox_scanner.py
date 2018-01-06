@@ -1,3 +1,4 @@
+import datetime
 import logging
 import sys
 import traceback
@@ -14,8 +15,8 @@ class InboxScanner:
         self.reddit_client = reddit_client
         self.rest_wallet = rest_wallet
         self.subreddit = subreddit
-
-        logging.basicConfig(filename="inbox_scanner.log", level=logging.INFO)
+        log_file_name = "inbox_scanner_" + str(datetime.datetime.now().isoformat()) + ".log"
+        logging.basicConfig(filename=log_file_name, level=logging.INFO, format='%(asctime)s %(message)s')
         log = logging.getLogger("inbox")
         self.log = log
 

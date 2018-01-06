@@ -40,7 +40,7 @@ def handle_api_exceptions(max_attempts=1):
                     error_msg = "SocketError \"{error}\" occurred: ".format(
                         error=e)
                     args[0].log.error(error_msg)
-                sleep_time = sleep_time or retries * 50
+                sleep_time = sleep_time or retries * 15
                 args[0].log.error("{0} in {f}. Sleeping for {t} seconds. "
                                "Attempt {rt} of {at}.".format(error_msg, f=func.__name__,
                                                               t=sleep_time, rt=retries + 1, at=max_attempts))

@@ -1,10 +1,55 @@
 import datetime
 import logging
 import sys
+import time
 import traceback
+from functools import wraps
+from socket import error as SocketError
 
 import praw.exceptions
 import prawcore
+
+
+def handle_api_exceptions(max_attempts=1):
+    """Return a function decorator that wraps a given function in a
+    try-except block that will handle various exceptions that may
+    occur during an API request to reddit. A maximum number of retry
+    attempts may be specified.
+    """
+
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            retries = 0
+            while retries < max_attempts:
+                sleep_time = None
+                error_msg = ""
+                try:
+                    return func(*args, **kwargs)
+                # Handle and log miscellaneous API exceptions
+                except praw.exceptions.PRAWException as e:
+                    error_msg = "PRAW Exception \"{error}\" occurred: ".format(
+                        error=e)
+                except praw.exceptions.ClientException as e:
+                    error_msg = "Client Exception \"{error}\" occurred: ".format(
+                        error=e)
+                except praw.exceptions.APIException as e:
+                    error_msg = "API Exception \"{error}\" occurred: ".format(
+                        error=e)
+                except SocketError as e:
+                    error_msg = "SocketError \"{error}\" occurred: ".format(
+                        error=e)
+                    args[0].log.error(error_msg)
+                sleep_time = sleep_time or retries * 150
+                args[0].log.error("{0} in {f}. Sleeping for {t} seconds. "
+                               "Attempt {rt} of {at}.".format(error_msg, f=func.__name__,
+                                                              t=sleep_time, rt=retries + 1, at=max_attempts))
+                time.sleep(sleep_time)
+                retries += 1
+
+        return wrapper
+
+    return decorator
 
 
 class CommentsScanner:
@@ -20,6 +65,7 @@ class CommentsScanner:
         log = logging.getLogger("comments")
         self.log = log
 
+    @handle_api_exceptions(max_attempts=5)
     def comment_reply(self, comment, reply_text):
         self.log.info("COMMENT REPLY")
         self.log.info(reply_text)

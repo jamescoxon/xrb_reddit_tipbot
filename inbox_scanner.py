@@ -90,6 +90,9 @@ class InboxScanner:
         item.reply(reply_message)
 
     def parse_item(self, item):
+        self.log.info("Item is as follows:")
+        self.log.info((vars(item)))
+
         user_table = self.db['user']
         message_table = self.db['message']
         self.log.info("\n\n")
@@ -126,11 +129,12 @@ class InboxScanner:
                 if commands[0] == '!register':
                     self.log.info('Registering account')
                     self.register_account(item, user_table)
-                else:
-                    self.log.info("Could not parse message")
-                    reply_message = 'Your account is not registered and I could not parse your command\n\n' + \
-                                    ' Reply with !register in the body of the message to begin\n\n'
-                    item.reply(reply_message)
+
+                #else:
+                #    self.log.info("Could not parse message")
+                #    reply_message = 'Your account is not registered and I could not parse your command\n\n' + \
+                #                    ' Reply with !register in the body of the message to begin\n\n'
+                #    item.reply(reply_message)
 
         # Add message to database
         record = dict(user_id=item.author.name, message_id=item.name)
@@ -143,7 +147,7 @@ class InboxScanner:
 
         try:
             for item in self.reddit_client.inbox.stream():
-                self.parse_item(item, )
+                self.parse_item(item)
 
         except (praw.exceptions.PRAWException, prawcore.exceptions.PrawcoreException) as e:
             self.log.error("could not log in because: " + str(e))

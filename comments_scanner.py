@@ -103,6 +103,7 @@ class CommentsScanner:
                     post_body = self.rest_wallet.post_to_wallet(data, self.log)
                     reply_text = reply_text + 'Tipped %s to /u/%s\n\nhttps://raiblocks.net/block/index.php?h=%s' % (
                         amount, receiving_user, str(post_body['block']))
+                    reply_text = reply_text + "\r\n Go to https://www.reddit.com/r/RaiBlocks_tipbot/wiki/index for more info"
                 else:
                     reply_text = reply_text + 'Not enough in your account to tip'
 

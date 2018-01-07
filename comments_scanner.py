@@ -120,7 +120,7 @@ class CommentsScanner:
     # This method corrects an inconsistency in the current db state
     # users were registered with different string casing accidentally i.e valentulus_menskr vs Valentulus_menskr
     def find_user(self, user_id):
-        statement = 'SELECT * FROM user WHERE user_id=' + user_id + ' COLLATE NOCASE'
+        statement = 'SELECT * FROM user WHERE user_id="' + user_id + '" COLLATE NOCASE'
         size = 0
         target_row = None
 

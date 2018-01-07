@@ -219,7 +219,8 @@ class CommentsScanner:
         comment_table = self.db['comments']
         self.log.info('Invalid formatting')
         self.comment_reply(comment,
-                           'Tip command is invalid. Follow the format `!tipxrb <username> <amount>`')
+                           'Tip command is invalid. Follow the format `!tipxrb <username> <amount>`\n\n '
+                           + 'Amount must be > 0 and < 5')
         record = dict(
             comment_id=comment.fullname, to=None, amount=None, author=comment.author.name)
         self.log.info("Inserting into db: " + str(record))

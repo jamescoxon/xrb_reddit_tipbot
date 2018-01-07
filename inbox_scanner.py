@@ -16,7 +16,7 @@ class InboxScanner:
         self.rest_wallet = rest_wallet
         self.subreddit = subreddit
         log_file_name = "inbox_scanner_" + str(datetime.datetime.now().isoformat()) + ".log"
-        logging.basicConfig(filename=log_file_name, level=logging.INFO, format='%(asctime)s %(message)s')
+        logging.basicConfig(filename=log_file_name, level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
         log = logging.getLogger("inbox")
         self.log = log
 

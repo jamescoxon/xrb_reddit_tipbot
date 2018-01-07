@@ -93,7 +93,7 @@ class CommentsScanner:
                 reply_text = ""
 
                 if prior_reply_text is not None:
-                    reply_text = prior_reply_text + "\r\n"
+                    reply_text = prior_reply_text + "\n\n"
 
                 # check amount left
                 if int(rai_send) <= int(rai_balance['amount']):
@@ -101,9 +101,9 @@ class CommentsScanner:
                     data = {'action': 'send', 'wallet': self.wallet_id, 'source': sender_user_address,
                             'destination': receiving_address, 'amount': int(raw_send)}
                     post_body = self.rest_wallet.post_to_wallet(data, self.log)
-                    reply_text = reply_text + 'Tipped %s to /u/%s\n\nhttps://raiblocks.net/block/index.php?h=%s' % (
+                    reply_text = reply_text + 'Tipped %s to /u/%s\n\n[Block Link](https://raiblocks.net/block/index.php?h=%s)' % (
                         amount, receiving_user, str(post_body['block']))
-                    reply_text = reply_text + "\r\n Go to https://www.reddit.com/r/RaiBlocks_tipbot/wiki/index for more info"
+                    reply_text = reply_text + "  \n\nGo to the [wiki](https://www.reddit.com/r/RaiBlocks_tipbot/wiki/index) for more info"
                 else:
                     reply_text = reply_text + 'Not enough in your account to tip'
 
@@ -216,9 +216,15 @@ class CommentsScanner:
         return exists
 
     def invalid_formatting(self, comment):
+        comment_table = self.db['comments']
         self.log.info('Invalid formatting')
         self.comment_reply(comment,
                            'Tip command is invalid. Follow the format `!tipxrb <username> <amount>`')
+        record = dict(
+            comment_id=comment.fullname, to=None, amount=None, author=comment.author.name)
+        self.log.info("Inserting into db: " + str(record))
+        comment_table.insert(record)
+        self.log.info('DB updated')
 
     def process_command(self, comment, receiving_user, amount):
         if self.isfloat(amount):
